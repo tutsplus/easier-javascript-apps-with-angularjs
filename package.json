@@ -1,0 +1,12 @@
+{
+  "name": "angular-resource-example",
+  "version": "0.0.1",
+  "description": "Easier Javascript Apps with AngularJS",
+  "main": "server/server.js",
+  "author": "Tom Ashworth",
+  "license": "MIT",
+  "dependencies": {
+    "express": "~3.0.6",
+    "mongoose": "~3.5.4"
+  }
+}

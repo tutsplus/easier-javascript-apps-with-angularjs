@@ -1,0 +1,84 @@
+ <!DOCTYPE html>
+<html ng-app="contacts">
+<meta charset="utf-8">
+<title>Contacts</title>
+<meta name="viewport" content="width=device-width">
+
+<base href="/">
+<script src="http://code.angularjs.org/1.0.4/angular.js"></script>
+<script src="http://code.angularjs.org/1.0.4/angular-resource.js"></script>
+
+<style>
+  * { box-sizing: border-box; }
+  body { font: 14px/1.5 sans-serif; color: #222; margin: 3em; }
+  table, input, textarea { width: 100%; }
+  th { text-align: left; }
+  h4 { margin: 0; }
+</style>
+
+<div ng-controller="Contacts">
+  <h1>Contacts</h1>
+  <div ng-view></div>
+</div>
+
+<script>
+  angular.module('contacts', ['ngResource'])
+  .config(function ($routeProvider, $locationProvider) {
+    // Set up our routes
+    $routeProvider
+      .when('/contact/:name', {
+        controller: 'Single',
+        templateUrl: 'single.html'
+      })
+      .when('/add', {
+        controller: 'Add',
+        templateUrl: 'add.html'
+      })
+      .when('/', {
+        controller: 'Table',
+        templateUrl: 'table.html'
+      });
+    // Use HTML5 mode (History API) when changing URL
+    $locationProvider.html5Mode(true);
+  })
+  // Setup a 'Contact' service that can be requested by any other
+  // part of the module, and then injected by Angular
+  .factory('Contact', function ($resource) {
+    return $resource('/api/contact/:name', { name: '@name.clean' });
+  })
+  // Controllers
+  .controller('Contacts', function ($scope, $resource) {})
+  .controller('Table', function ($scope, $resource, Contact) {
+    // Use the $resource query method to grab all contacts
+    $scope.contacts = Contact.query();
+  })
+  .controller('Single', function ($scope, $resource, $routeParams, Contact, $timeout, $location) {
+    // Grab just a single contact
+    $scope.contact = Contact.get({ name: $routeParams.name });
+
+    // Throttle the save POST request
+    var saveTimeout;
+    $scope.save = function () {
+      $timeout.cancel(saveTimeout);
+      saveTimeout = $timeout(function () {
+        // Save the contact and then update the scope & URL with what came
+        // back from the server
+        $scope.contact.$save(function (updated_contact) {
+          $scope.contact = updated_contact;
+          $location.path('/contact/' + updated_contact.name.clean).replace();
+        });
+      }, 1000);
+    };
+  })
+  .controller('Add', function ($scope, $resource, Contact, $location) {
+    // Create a new contact
+    $scope.contact = new Contact({});
+
+    // Save and redirect back home
+    $scope.save = function () {
+      $scope.contact.$save(function () {
+        $location.path('/');
+      });
+    };
+  });
+</script>

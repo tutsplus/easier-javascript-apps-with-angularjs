@@ -1,0 +1,24 @@
+<h2>New contact</h2>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th>Email</th>
+    <th>Number</th>
+  </tr>
+  <tr>
+    <td><input ng-model="contact.name.first"></td>
+    <td><input ng-model="contact.name.last"></a></td>
+    <td><input ng-model="contact.email"></td>
+    <td><input ng-model="contact.number"></td>
+  </tr>
+</table>
+
+<h4>Notes</h4>
+
+<textarea ng-model="contact.notes"></textarea>
+
+<button ng-click="save()">Save!</button>
+
+<a href="/">Back to list</a>
