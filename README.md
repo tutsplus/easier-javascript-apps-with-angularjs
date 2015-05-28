@@ -14,6 +14,10 @@ Before running it, make sure MongoDB is running.
 Then run `node server/server.js`, and point your browser
 at http://localhost:9000/
 
+## Warning
+
+Certain source files referred to in the later lessons of this course are not present in the source repository. Our appologies for this oversight.
+
 
 These are source files for the Tuts+ course: [Easier JavaScript Apps with AngularJS][published url]
 
